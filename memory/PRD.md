@@ -19,9 +19,10 @@ Build a modern, premium SaaS-style web app UI for "WorkflowAI – AI Debugger & 
 - PDF Export and Email Reports
 - Multi-model support: Claude Sonnet 4.5, GPT-5.2, Gemini 3 Flash
 - Compare Models page (run all 3 models simultaneously)
+- Quick Templates feature (pre-built workflow templates)
 - Free tier deployment
 
-## What's Been Implemented ✅
+## What's Been Implemented
 - [x] JWT Authentication (register/login/logout/forgot/reset password)
 - [x] Premium dark "Control Room" UI with Swiss high-contrast design
 - [x] Multi-AI model support (Claude Sonnet 4.5, GPT-5.2, Gemini 3 Flash)
@@ -30,7 +31,16 @@ Build a modern, premium SaaS-style web app UI for "WorkflowAI – AI Debugger & 
 - [x] PDF Export (html2pdf.js)
 - [x] Email Reports (Resend API)
 - [x] Compare Models feature (3 models in parallel)
-- [x] Deployment health checks passed (Feb 2026)
+- [x] Quick Templates (6 templates on Dashboard, 4 on Compare page) — Added Mar 31, 2026
+- [x] Deployment health checks passed
+
+## Quick Templates Added (Mar 31, 2026)
+- CI/CD Pipeline
+- Data ETL
+- API Gateway
+- E-commerce Order
+- ML Pipeline
+- Microservices
 
 ## Prioritized Backlog
 ### P0 (Critical)
@@ -52,9 +62,9 @@ Build a modern, premium SaaS-style web app UI for "WorkflowAI – AI Debugger & 
 - POST /api/auth/register, POST /api/auth/login, GET /api/auth/me
 - POST /api/analyze-workflow
 - GET /api/models
-- GET /api/history, DELETE /api/history/{id}, PATCH /api/history/{id}/share
+- GET /api/workflow-history, DELETE /api/workflow-history/{id}, POST /api/workflow-history/{id}/toggle-public
 - GET /api/shared/{share_token}
-- POST /api/email-report
+- POST /api/send-report
 - POST /api/compare-models
 
 ## Test Credentials
