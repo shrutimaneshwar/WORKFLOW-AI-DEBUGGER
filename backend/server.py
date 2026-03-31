@@ -365,7 +365,7 @@ async def get_workflow_history(user: dict = Depends(get_current_user)):
     histories = await db.workflow_history.find(
         {"user_id": user["_id"]},
         {"_id": 1, "workflow_description": 1, "complexity_analysis": 1, "created_at": 1, "share_token": 1, "is_public": 1, "model_used": 1}
-    ).sort("created_at", -1).to_list(100)
+    ).sort("created_at", -1).limit(100).to_list(100)
     for h in histories:
         h["id"] = str(h.pop("_id"))
     return histories

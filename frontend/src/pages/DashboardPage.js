@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL + "/api";
-const FRONTEND_URL = process.env.REACT_APP_BACKEND_URL;
+const FRONTEND_URL = window.location.origin;
 
 function OutputCard({ title, icon: Icon, iconColor, items, staggerClass }) {
   return (
