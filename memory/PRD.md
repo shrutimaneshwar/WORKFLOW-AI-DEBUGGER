@@ -1,68 +1,61 @@
-# WorkflowAI - AI Debugger & Optimizer
+# WorkflowAI – AI Debugger & Optimizer
 
-## Product Overview
-A modern, premium SaaS-style web app that analyzes workflow descriptions using AI and returns structured insights across 6 categories. Features multi-model AI support, workflow history, PDF export, email reports, and shareable analysis links.
-
-## Core Requirements
-- Premium dark mode UI (#0F172A background, #1E293B cards)
-- Swiss & High-Contrast design archetype (Outfit/IBM Plex Sans typography)
-- JWT-based authentication (register, login, forgot/reset password)
-- Multi-line workflow description input
-- AI analysis using 3 models: Claude Sonnet 4.5, GPT-5.2, Gemini 3 Flash
-- 6 output sections with color-coded accents
-- Workflow history with share/delete/public-toggle
-- PDF export via html2pdf.js
-- Email reports via Resend API
-- Public shareable analysis links
-
-## Tech Stack
-- Frontend: React 19, Tailwind CSS, Lucide React, react-router-dom v7, html2pdf.js
-- Backend: FastAPI, Python, bcrypt, PyJWT, resend
-- Database: MongoDB (Motor async)
-- AI: emergentintegrations (Claude, GPT-5.2, Gemini 3 Flash)
+## Original Problem Statement
+Build a modern, premium SaaS-style web app UI for "WorkflowAI – AI Debugger & Optimizer" with 6 output sections. Add workflow history, PDF export, share links, user auth, UI/UX animations, multiple AI models, email reports, and a "Compare Models" feature. Ensure the application is deployed in the free tier.
 
 ## Architecture
-```
-/app/backend/server.py - All backend routes (auth, analysis, history, sharing, email)
-/app/frontend/src/
-  App.js - Router with protected/public routes
-  contexts/AuthContext.js - Auth state management
-  pages/LoginPage.js - Split-screen login
-  pages/RegisterPage.js - Split-screen register
-  pages/ForgotPasswordPage.js - Forgot password
-  pages/ResetPasswordPage.js - Reset password
-  pages/DashboardPage.js - Main dashboard (analysis, history, PDF, email)
-  pages/SharedPage.js - Public shared analysis view
-```
+- **Frontend**: React.js, Tailwind CSS, html2pdf.js, Lucide React, Shadcn UI
+- **Backend**: FastAPI, Python, bcrypt, PyJWT, asyncio
+- **Database**: MongoDB (Motor async client)
+- **AI**: emergentintegrations (Claude Sonnet 4.5, GPT-5.2, Gemini 3 Flash)
+- **Email**: Resend API
 
-## API Endpoints
-- POST /api/auth/register, /login, /logout, /refresh, /forgot-password, /reset-password
-- GET /api/auth/me
-- GET /api/models - Available AI models
-- POST /api/analyze-workflow - AI analysis (requires auth)
-- GET /api/workflow-history - User's analysis history
-- GET /api/workflow-history/{id} - Single analysis
-- POST /api/workflow-history/{id}/toggle-public - Toggle sharing
-- DELETE /api/workflow-history/{id} - Delete analysis
-- GET /api/shared/{token} - Public shared analysis
-- POST /api/send-report - Email report (requires Resend API key)
+## Core Requirements
+- Premium Dark mode UI (Swiss & High-Contrast archetype)
+- Multi-line text input for workflow description
+- 6 Output cards with accent colors and icons
+- JWT Authentication (Login/Register/Forgot/Reset)
+- Workflow history (delete, share public links, view past analyses)
+- PDF Export and Email Reports
+- Multi-model support: Claude Sonnet 4.5, GPT-5.2, Gemini 3 Flash
+- Compare Models page (run all 3 models simultaneously)
+- Free tier deployment
 
-## What's Implemented (March 31, 2026)
-- [x] Phase 1: JWT Authentication + Workflow History
-- [x] Phase 2: UI/UX Redesign (Swiss high-contrast dark theme)
-- [x] Phase 3: PDF Export + Shareable Links
-- [x] Phase 4: Multi-AI Model Support (Claude, GPT-5.2, Gemini)
-- [x] Phase 5: Email Reports endpoint (requires Resend API key)
-- [x] Phase 6: Deployment health check passed 100%
-- [x] Compare Models: Side-by-side comparison of all 3 AI models on same workflow
+## What's Been Implemented ✅
+- [x] JWT Authentication (register/login/logout/forgot/reset password)
+- [x] Premium dark "Control Room" UI with Swiss high-contrast design
+- [x] Multi-AI model support (Claude Sonnet 4.5, GPT-5.2, Gemini 3 Flash)
+- [x] 6 AI analysis output cards with accent colors
+- [x] Workflow History (view, delete, share via public links)
+- [x] PDF Export (html2pdf.js)
+- [x] Email Reports (Resend API)
+- [x] Compare Models feature (3 models in parallel)
+- [x] Deployment health checks passed (Feb 2026)
 
-## Requires User Configuration
-- **Resend API key** (RESEND_API_KEY in backend/.env) for email reports
-  - Sign up at https://resend.com
-  - Create API key from Dashboard > API Keys
-  - Add to .env: RESEND_API_KEY=re_your_key
+## Prioritized Backlog
+### P0 (Critical)
+- [x] Deploy to free tier — READY, user to click Deploy in UI
 
-## Deployment
-- Free tier deployment ready
-- All health checks passed
-- CORS configured for production
+### P1 (High)
+- [ ] Workflow visualization/diagramming
+
+### P2 (Medium)
+- [ ] Export comparison results as PDF
+- [ ] Team workspaces with shared analysis libraries
+- [ ] Webhook integrations for CI/CD pipeline analysis
+
+## DB Schema
+- `users`: {email, password_hash, name, role, created_at}
+- `workflow_history`: {user_id, workflow, analysis, model_used, created_at, is_public, share_token}
+
+## Key API Endpoints
+- POST /api/auth/register, POST /api/auth/login, GET /api/auth/me
+- POST /api/analyze-workflow
+- GET /api/models
+- GET /api/history, DELETE /api/history/{id}, PATCH /api/history/{id}/share
+- GET /api/shared/{share_token}
+- POST /api/email-report
+- POST /api/compare-models
+
+## Test Credentials
+- Email: admin@workflowai.com / Password: admin123
