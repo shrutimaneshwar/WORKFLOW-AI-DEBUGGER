@@ -6,11 +6,68 @@ import {
   Loader2, AlertTriangle, Zap, DollarSign, Brain,
   BarChart3, Wrench, Clock, Share2, Globe, GlobeLock,
   Trash2, ChevronDown, ChevronUp, Activity, LogOut, Copy, Check,
-  Download, Mail, Send, X, GitCompare
+  Download, Mail, Send, X, GitCompare, FileText, Sparkles
 } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL + "/api";
 const FRONTEND_URL = window.location.origin;
+
+const WORKFLOW_TEMPLATES = [
+  {
+    id: "cicd",
+    label: "CI/CD Pipeline",
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-500/10",
+    borderColor: "border-emerald-500/20",
+    description: "Code push to production deployment",
+    workflow: "Developer pushes code to GitHub -> CI triggers on push event -> Run unit tests -> Run integration tests -> Build Docker image -> Push to container registry -> Deploy to staging environment -> Run smoke tests on staging -> Manual approval gate -> Deploy to production -> Run health checks -> Notify team via Slack"
+  },
+  {
+    id: "etl",
+    label: "Data ETL",
+    color: "text-amber-400",
+    bgColor: "bg-amber-500/10",
+    borderColor: "border-amber-500/20",
+    description: "Extract, transform & load data pipeline",
+    workflow: "Schedule daily cron job at 2 AM UTC -> Extract data from PostgreSQL source tables -> Extract data from third-party REST API -> Validate raw data schema -> Transform: clean null values and normalize formats -> Transform: join datasets on customer_id -> Transform: aggregate metrics by region -> Load transformed data into data warehouse -> Update materialized views -> Generate data quality report -> Send report email to data team"
+  },
+  {
+    id: "api-gateway",
+    label: "API Gateway",
+    color: "text-blue-400",
+    bgColor: "bg-blue-500/10",
+    borderColor: "border-blue-500/20",
+    description: "Request routing with auth & rate limiting",
+    workflow: "Client sends HTTP request -> API Gateway receives request -> Check rate limit (100 req/min per IP) -> Validate JWT access token -> Extract user permissions from token claims -> Route to appropriate microservice based on path -> Microservice processes request -> Cache response in Redis (TTL 5min) -> Transform response format -> Return response with CORS headers -> Log request metrics to monitoring"
+  },
+  {
+    id: "ecommerce",
+    label: "E-commerce Order",
+    color: "text-rose-400",
+    bgColor: "bg-rose-500/10",
+    borderColor: "border-rose-500/20",
+    description: "Order placement to fulfillment",
+    workflow: "Customer clicks 'Place Order' -> Validate cart items and stock availability -> Calculate final price with discounts and tax -> Process payment via Stripe -> On payment success: create order record in database -> Reserve inventory -> Send order confirmation email to customer -> Notify warehouse system for fulfillment -> Generate shipping label -> Update order status to 'Processing' -> Track shipment status -> On delivery: send delivery confirmation"
+  },
+  {
+    id: "ml-pipeline",
+    label: "ML Pipeline",
+    color: "text-violet-400",
+    bgColor: "bg-violet-500/10",
+    borderColor: "border-violet-500/20",
+    description: "Training to model deployment flow",
+    workflow: "Fetch training data from data lake -> Split into train/validation/test sets (70/15/15) -> Feature engineering: normalize, encode categoricals -> Train model using XGBoost -> Evaluate on validation set -> If accuracy > 0.85: proceed, else tune hyperparameters -> Run evaluation on test set -> Compare with current production model -> If improvement > 2%: approve for deployment -> Package model as Docker container -> Deploy to model serving endpoint -> A/B test with 10% traffic -> Monitor prediction drift and latency"
+  },
+  {
+    id: "microservices",
+    label: "Microservices",
+    color: "text-cyan-400",
+    bgColor: "bg-cyan-500/10",
+    borderColor: "border-cyan-500/20",
+    description: "Inter-service communication pattern",
+    workflow: "User service receives signup request -> Validate input and create user record -> Publish 'user.created' event to message queue -> Notification service consumes event -> Send welcome email and push notification -> Analytics service consumes event -> Update user metrics dashboard -> Billing service consumes event -> Create trial subscription -> API Gateway updates route cache -> User service returns success response to client -> Health check monitors all services"
+  },
+];
 
 function OutputCard({ title, icon: Icon, iconColor, items, staggerClass }) {
   return (
@@ -88,6 +145,7 @@ export default function DashboardPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [selectedModel, setSelectedModel] = useState("claude");
   const [models, setModels] = useState([]);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailTo, setEmailTo] = useState("");
@@ -122,6 +180,7 @@ export default function DashboardPage() {
     setLoading(true);
     setError(null);
     setAnalysis(null);
+    setShowTemplates(false);
     try {
       const { data } = await axios.post(`${API}/analyze-workflow`, {
         workflow_description: workflowInput,
@@ -283,6 +342,38 @@ export default function DashboardPage() {
             className="w-full h-32 bg-[#020617] border border-[#334155] rounded-md px-4 py-3 text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none font-mono text-sm"
             disabled={loading}
           />
+
+          {/* Quick Templates */}
+          <div className="mt-3">
+            <button
+              data-testid="toggle-templates-button"
+              onClick={() => setShowTemplates(s => !s)}
+              className="flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-blue-400 transition-colors"
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Quick Templates</span>
+              {showTemplates ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+
+            {showTemplates && (
+              <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 animate-fadeIn" data-testid="templates-grid">
+                {WORKFLOW_TEMPLATES.map(t => (
+                  <button
+                    key={t.id}
+                    data-testid={`template-${t.id}`}
+                    onClick={() => { setWorkflowInput(t.workflow); setShowTemplates(false); }}
+                    className={`group text-left px-3 py-2.5 rounded-md border ${t.borderColor} ${t.bgColor} hover:brightness-125 transition-all duration-200`}
+                  >
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <FileText className={`w-3 h-3 ${t.color}`} />
+                      <span className={`text-xs font-medium ${t.color}`}>{t.label}</span>
+                    </div>
+                    <p className="text-[10px] text-[#64748B] leading-tight">{t.description}</p>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {error && (
             <div className="mt-3 p-3 bg-rose-500/10 border border-rose-500/20 rounded-md text-rose-400 text-sm" data-testid="analysis-error">
