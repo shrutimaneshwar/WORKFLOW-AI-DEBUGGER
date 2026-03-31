@@ -54,6 +54,7 @@ A modern, premium SaaS-style web app that analyzes workflow descriptions using A
 - [x] Phase 4: Multi-AI Model Support (Claude, GPT-5.2, Gemini)
 - [x] Phase 5: Email Reports endpoint (requires Resend API key)
 - [x] Phase 6: Deployment health check passed 100%
+- [x] Compare Models: Side-by-side comparison of all 3 AI models on same workflow
 
 ## Requires User Configuration
 - **Resend API key** (RESEND_API_KEY in backend/.env) for email reports
