@@ -77,7 +77,3 @@ agenthub/agents/youtube/db
 .cache/
 
 memory/test_credentials.md
--e 
-# Environment files
-*.env
-*.env.*
